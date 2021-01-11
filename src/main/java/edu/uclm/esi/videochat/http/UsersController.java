@@ -109,7 +109,7 @@ public class UsersController {
 				user.setPwd(pwd2);
 				userRepo.save(user);
 
-			} else throw new Exception("Las paasswords no coinciden");
+			} else throw new Exception("Las passwords no coinciden");
 		} else 
 			throw new Exception("Credenciales inválidas");
 	}
@@ -118,4 +118,6 @@ public class UsersController {
 	public List<User> getUsuariosConectados() {
 		return Manager.get().getUsuariosConectados();
 	}
+
+
 }

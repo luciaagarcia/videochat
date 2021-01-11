@@ -17,6 +17,7 @@ public class Message {
 
 	public Message () {
 		this.id = UUID.randomUUID().toString();
+		this.date = System.currentTimeMillis();
 	}
 	
 	

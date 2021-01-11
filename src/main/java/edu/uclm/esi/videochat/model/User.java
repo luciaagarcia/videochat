@@ -19,7 +19,9 @@ public class User {
 	private String pwd;
 	private String picture;
 	@Transient 
-	private WebSocketSession session;
+	private WebSocketSession sessionDeVideo;
+	@Transient 
+	private WebSocketSession sessionDeTexto;
 	private Long confirmationDate;
 	
 	public User() {
@@ -67,13 +69,22 @@ public class User {
 		this.picture = picture;
 	}
 
-	public void setSession(WebSocketSession session) {
-		this.session = session;
+	public void setSessionDeTexto(WebSocketSession sessionDeTexto) {
+		this.sessionDeTexto = sessionDeTexto;
 	}
 	
 	@JsonIgnore
-	public WebSocketSession getSession() {
-		return session;
+	public WebSocketSession getSessionDeTexto() {
+		return sessionDeTexto;
+	}
+
+	public void setSessionDeVideo(WebSocketSession sessionDeVideo) {
+		this.sessionDeVideo = sessionDeVideo;
+	}
+	
+	@JsonIgnore
+	public WebSocketSession getSessionDeVideo() {
+		return sessionDeVideo;
 	}
 
 	public void setConfirmationDate(Long date) {

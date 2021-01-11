@@ -15,6 +15,26 @@ import edu.uclm.esi.videochat.model.User;
 public class WebSocketTexto extends WebSocketVideoChat {
 	
 	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		session.setBinaryMessageSizeLimit(1000*1024*1024);
+		session.setTextMessageSizeLimit(64*1024);
+		
+		User user = getUser(session);
+		user.setSessionDeTexto(session);
+
+		JSONObject mensaje = new JSONObject();
+		mensaje.put("type", "ARRIVAL");
+		mensaje.put("userName", user.getName());
+		mensaje.put("picture", user.getPicture());
+		
+		this.broadcast(mensaje);
+		
+		WrapperSession wrapper = new WrapperSession(session, user);
+		this.sessionsByUserName.put(user.getName(), wrapper);
+		this.sessionsById.put(session.getId(), wrapper);
+	}
+
+	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		JSONObject jso = new JSONObject(message.getPayload());
 		String type = jso.getString("type");
@@ -34,7 +54,7 @@ public class WebSocketTexto extends WebSocketVideoChat {
 		} else if (type.equals("PARTICULAR")) {
 			String destinatario = jso.getString("destinatario");
 			User user = Manager.get().findUser(destinatario);
-			WebSocketSession navegadorDelDestinatario = user.getSession();
+			WebSocketSession navegadorDelDestinatario = user.getSessionDeTexto();
 			
 			JSONObject jsoMessage = new JSONObject();
 			jsoMessage.put("time", formatDate(System.currentTimeMillis()));
@@ -42,6 +62,7 @@ public class WebSocketTexto extends WebSocketVideoChat {
 			
 			this.send(navegadorDelDestinatario, "type", "PARTICULAR", "remitente", enviador, "message", jsoMessage);
 			Message mensaje = new Message();
+			mensaje.setRecipient(destinatario);
 			mensaje.setMessage(jso.getString("texto"));
 			mensaje.setSender(enviador);
 			guardarMensaje(mensaje);
