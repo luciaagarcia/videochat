@@ -1,7 +1,8 @@
 class Chat {
-    constructor(ko) {
+    constructor(ko, _user) {
         let self = this;
         this.ko = ko;
+        this.user = _user;
 
         this.estado = ko.observable("");
         this.error = ko.observable();
@@ -93,6 +94,7 @@ class Chat {
         if (conversacion == null) {
             conversacion = new Conversacion(this.ko, interlocutor.nombre, this);
             this.conversaciones.push(conversacion);
+
         }
         this.ponerVisible(interlocutor.nombre);
     }
@@ -115,4 +117,54 @@ class Chat {
             this.usuarios.push(new Usuario(userName, picture));
         }
     }
+
+    seleccionarDestinatario = function(data) {
+        parent.setDestinatario(data);
+    }
+
+    obtenerMensajes() {
+
+        var info = {
+            // sender: this.user,
+            // recipient: this.destinatario
+            sender: "Fenri",
+            recipient: "Ana"
+        };
+
+        var data = {
+            data: JSON.stringify(info),
+            url: "users/obtenerMensajes",
+            type: "post",
+            contentType: 'application/json',
+            success: function(response) {
+
+                for (var i = 0; i < response.length; i++) {
+                    var date = new Date(response[i].date);
+                    var message = response[i].message;
+                    var recipient = response[i].recipient
+                        //var sender = response[i].sender;
+
+                    var conversacionActual = buscarConversacion(this.destinatario);
+                    if (conversacionActual != null) {
+                        var mensaje = new Mensaje(message, date);
+                        conversacionActual.addMensaje(mensaje);
+                    }
+                    // else {
+                    //     conversacionActual = new Conversacion(ko, recipient, self);
+                    //     var mensaje = new Mensaje(message, date);
+                    //     conversacionActual.addMensaje(mensaje);
+                    //     self.conversaciones.push(conversacionActual);
+                    // }
+                }
+                self.ponerVisible(recipient);
+            },
+            error: function(response) {
+                console.log("Error: " + response.responseJSON.error);
+            }
+        };
+        $.ajax(data);
+    }
+
+
+
 }

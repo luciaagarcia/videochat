@@ -1,6 +1,7 @@
 package edu.uclm.esi.videochat.http;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.uclm.esi.videochat.model.Email;
 import edu.uclm.esi.videochat.model.Manager;
+import edu.uclm.esi.videochat.model.Message;
 import edu.uclm.esi.videochat.model.Token;
 import edu.uclm.esi.videochat.model.User;
+import edu.uclm.esi.videochat.springdao.MessageRepository;
 import edu.uclm.esi.videochat.springdao.TokenRepository;
 import edu.uclm.esi.videochat.springdao.UserRepository;
 
@@ -36,6 +39,8 @@ public class UsersController {
 	private UserRepository userRepo;
 	@Autowired
 	private TokenRepository tokenRepo;
+	@Autowired
+	private MessageRepository msgRepo;
 	
 	@PostMapping(value = "/login")
 	public User login(HttpServletRequest request, @RequestBody Map<String, Object> credenciales) throws Exception {
@@ -119,5 +124,14 @@ public class UsersController {
 		return Manager.get().getUsuariosConectados();
 	}
 
-
+	@PostMapping(value = "/obtenerMensajes")
+	public ArrayList<Message> obtenerMensajes(HttpServletRequest request, @RequestBody Map<String, Object> user) throws Exception {
+		JSONObject jso = new JSONObject(user);
+		String sender = jso.getString("sender");
+		String recipient = jso.getString("recipient");
+		ArrayList<Message> listaMensajes = msgRepo.recuperarMensajes(sender, recipient);
+		if (listaMensajes.size()==0)
+			throw new Exception("No existen mensajes entre esos usuarios");
+		return listaMensajes;
+	}
 }

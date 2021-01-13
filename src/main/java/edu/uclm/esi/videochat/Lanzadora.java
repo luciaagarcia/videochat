@@ -10,5 +10,4 @@ public class Lanzadora {
 		SpringApplication.run(Lanzadora.class, args);
 	}
 
-
 }
