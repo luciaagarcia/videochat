@@ -1,8 +1,8 @@
 class Chat {
-    constructor(ko, _user) {
+    constructor(ko, usuarioConectado) {
         let self = this;
         this.ko = ko;
-        this.user = _user;
+        this.usuarioConectado = usuarioConectado;
 
         this.estado = ko.observable("");
         this.error = ko.observable();
@@ -13,6 +13,8 @@ class Chat {
 
         this.destinatario = ko.observable();
         this.mensajeQueVoyAEnviar = ko.observable();
+
+        this.mensajesRecuperados = ko.observableArray([]);
 
         this.chat = new WebSocket("wss://" + window.location.host + "/wsTexto");
 
@@ -33,13 +35,14 @@ class Chat {
 
         this.chat.onmessage = function(event) {
             var data = JSON.parse(event.data);
+
             if (data.type == "FOR ALL") {
                 var mensaje = new Mensaje(data.message, data.time);
                 self.mensajesRecibidos.push(mensaje);
+
             } else if (data.type == "ARRIVAL") {
                 self.addUsuario(data.userName, data.picture);
-                // var usuario = new Usuario(data.userName, data.picture);
-                // self.usuarios.push(usuario);
+
             } else if (data.type == "BYE") {
                 var userName = data.userName;
                 for (var i = 0; i < self.usuarios().length; i++) {
@@ -97,6 +100,8 @@ class Chat {
 
         }
         this.ponerVisible(interlocutor.nombre);
+        // console.log(interlocutor.nombre);
+        // console.log(this.destinatario());
     }
 
     ponerVisible(nombreInterlocutor) {
@@ -122,49 +127,38 @@ class Chat {
         parent.setDestinatario(data);
     }
 
-    obtenerMensajes() {
-
+    recuperarMensaje = function() {
+        var mensajesRecuperados = new Array();
         var info = {
-            // sender: this.user,
-            // recipient: this.destinatario
-            sender: "Fenri",
-            recipient: "Ana"
+            sender: this.usuarioConectado().name,
+            recipient: this.destinatario().nombre
         };
-
         var data = {
+
             data: JSON.stringify(info),
             url: "users/obtenerMensajes",
             type: "post",
+            async: false,
             contentType: 'application/json',
             success: function(response) {
 
                 for (var i = 0; i < response.length; i++) {
                     var date = new Date(response[i].date);
                     var message = response[i].message;
-                    var recipient = response[i].recipient
-                        //var sender = response[i].sender;
+                    var mensaje = new Mensaje(message, date);
 
-                    var conversacionActual = buscarConversacion(this.destinatario);
-                    if (conversacionActual != null) {
-                        var mensaje = new Mensaje(message, date);
-                        conversacionActual.addMensaje(mensaje);
-                    }
-                    // else {
-                    //     conversacionActual = new Conversacion(ko, recipient, self);
-                    //     var mensaje = new Mensaje(message, date);
-                    //     conversacionActual.addMensaje(mensaje);
-                    //     self.conversaciones.push(conversacionActual);
-                    // }
+                    mensajesRecuperados.push(mensaje);
+
                 }
-                self.ponerVisible(recipient);
             },
             error: function(response) {
                 console.log("Error: " + response.responseJSON.error);
-            }
+            },
+
         };
+
         $.ajax(data);
+        return mensajesRecuperados;
     }
-
-
 
 }

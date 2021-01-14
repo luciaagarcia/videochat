@@ -7,7 +7,6 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils',
         self.userName = ko.observable("Fenri");
         self.pwd = ko.observable("fenri");
         self.message = ko.observable("");
-
         app.userName = self.userName();
 
         self.goToRegister = function() {

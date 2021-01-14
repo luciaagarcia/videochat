@@ -23,6 +23,16 @@ class Conversacion {
     }
 
     obtenerMensajes() {
-        this.chat.obtenerMensajes();
+        var mensajesObtenidos = this.chat.recuperarMensaje();
+        console.log(mensajesObtenidos);
+        console.log(mensajesObtenidos.length);
+        for (var i = 0; i < mensajesObtenidos.length; i++) {
+            this.mensajes.push(mensajesObtenidos[i]);
+        }
+
+        // mensajesObtenidos.forEach(mensaje => function() {
+
+        //     this.mensajes.push(mensaje);
+        // });
     }
 }

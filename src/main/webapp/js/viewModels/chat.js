@@ -69,7 +69,6 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
                 // Implement if needed
             };
 
-
         }
 
         return ChatViewModel;
