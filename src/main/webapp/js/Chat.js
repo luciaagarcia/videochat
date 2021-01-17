@@ -54,6 +54,7 @@ class Chat {
             } else if (data.type == "PARTICULAR") {
                 var conversacionActual = self.buscarConversacion(data.remitente);
                 if (conversacionActual != null) {
+
                     var mensaje = new Mensaje(data.message.message, data.message.time);
                     conversacionActual.addMensaje(mensaje);
                 } else {
@@ -123,11 +124,11 @@ class Chat {
         }
     }
 
-    seleccionarDestinatario = function(data) {
-        parent.setDestinatario(data);
-    }
+    // seleccionarDestinatario = function(data) {
+    //     parent.setDestinatario(data);
+    // }
 
-    recuperarMensaje = function() {
+    recuperarMensaje() {
         var mensajesRecuperados = new Array();
         var info = {
             sender: this.usuarioConectado().name,
@@ -143,7 +144,7 @@ class Chat {
             success: function(response) {
 
                 for (var i = 0; i < response.length; i++) {
-                    var date = new Date(response[i].date);
+                    var date = new Date(response[i].date).toLocaleString();
                     var message = response[i].message;
                     var mensaje = new Mensaje(message, date);
 

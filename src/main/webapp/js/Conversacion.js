@@ -16,23 +16,18 @@ class Conversacion {
             type: "PARTICULAR",
             destinatario: this.nombreInterlocutor,
             texto: this.textoAEnviar()
+
         };
         this.chat.enviar(mensaje);
-        var mensaje = new Mensaje(this.textoAEnviar());
-        this.addMensaje(mensaje);
+        var message = new Mensaje(this.textoAEnviar());
+
+        this.addMensaje(message);
     }
 
     obtenerMensajes() {
         var mensajesObtenidos = this.chat.recuperarMensaje();
-        console.log(mensajesObtenidos);
-        console.log(mensajesObtenidos.length);
         for (var i = 0; i < mensajesObtenidos.length; i++) {
             this.mensajes.push(mensajesObtenidos[i]);
         }
-
-        // mensajesObtenidos.forEach(mensaje => function() {
-
-        //     this.mensajes.push(mensaje);
-        // });
     }
 }
