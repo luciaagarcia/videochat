@@ -54,11 +54,12 @@ class VideoChat {
                 self.addMensaje("Añadiendo sessionDescription a la remoteDescription", "orange");
                 self.conexion.setRemoteDescription(rtcSessionDescription);
                 self.addMensaje("sessionDescription añadida a la remoteDescription", "orange");
-                if (!this.videoLocalOn)
+                if (this.videoLocalOn == false)
                     this.encenderVideoLocal();
                 return;
             }
         }
+        this.encenderVideoLocal();
     }
 
     anunciarLlamada(remitente, sessionDescription, recipient) {
@@ -71,11 +72,9 @@ class VideoChat {
     }
 
     aceptarLlamada(remitente, sessionDescription) {
-        if (!this.videoLocalOn)
-            this.encenderVideoLocal();
-
         if (!this.conexion)
             this.crearConexion();
+        setTimeout(function() {}, 5000);
 
         let rtcSessionDescription = new RTCSessionDescription(sessionDescription);
         this.addMensaje("Añadiendo sessionDescription a la remoteDescription", "grey");
@@ -113,7 +112,7 @@ class VideoChat {
     rechazarLlamada(remitente, sessionDescription, recipient) {
         let self = this;
         this.addMensaje("Llamada de " + remitente + " rechazada");
-        this.addMensaje("Implementar función rechazarLlamada", "red");
+        //this.addMensaje("Implementar función rechazarLlamada", "red");
         let msg = {
             type: "ANSWER",
             remitente: remitente,
@@ -123,9 +122,8 @@ class VideoChat {
         self.ws.send(JSON.stringify(msg));
     }
 
-    encenderVideoLocal() {
+    encenderVideoLocal(destinatario) {
         let self = this;
-
         let constraints = {
             video: true,
             audio: false
@@ -139,11 +137,13 @@ class VideoChat {
                 widgetVideoLocal.srcObject = stream;
                 self.videoLocalOn = true;
                 self.addMensaje("Vídeo local conectado", "green");
+
             },
             function(error) {
                 self.addMensaje("Error al cargar vídeo local: " + error, "red");
             }
         );
+
     }
 
     crearConexion() {
@@ -212,11 +212,9 @@ class VideoChat {
 
     enviarOferta(destinatario) {
         let self = this;
-        if (!self.videoLocalOn)
-            self.encenderVideoLocal();
-        if (!self.conexion)
-            self.crearConexion();
 
+        this.crearConexion();
+        setTimeout(function() {}, 5000);
 
         let sdpConstraints = {};
         this.addMensaje("Creando oferta en el servidor Stun");
