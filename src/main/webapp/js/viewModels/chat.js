@@ -34,19 +34,41 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
                 var data = {
                     url: "users/getUsuariosConectados",
                     type: "get",
+
                     contentType: 'application/json',
                     success: function(response) {
                         for (var i = 0; i < response.length; i++) {
                             var userName = response[i].name;
-                            var picture = response[i].picture;
-                            self.chat().addUsuario(userName, picture);
+                            self.chat().addUsuario(userName);
+                            self.getImagenesConectados(userName);
                         }
+
                     },
                     error: function(response) {
                         self.error(response.responseJSON.error);
                     }
                 };
                 $.ajax(data);
+
+
+            }
+
+            self.getImagenesConectados = function(userName) {
+
+                var data = {
+                    url: "users/getImagenesConectados/" + userName,
+                    type: "get",
+                    contentType: 'application/json',
+                    success: function(response) {
+                        var picture = response.picture;
+                        self.chat().addFoto(userName, picture);
+                    },
+                    error: function(response) {
+                        self.error(response.responseJSON.error);
+                    }
+                };
+                $.ajax(data);
+
             }
 
             self.encenderVideoLocal = function() {

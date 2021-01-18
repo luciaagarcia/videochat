@@ -41,7 +41,8 @@ class Chat {
                 self.mensajesRecibidos.push(mensaje);
 
             } else if (data.type == "ARRIVAL") {
-                self.addUsuario(data.userName, data.picture);
+                self.addUsuario(data.userName);
+                self.addFoto(data.userName, data.picture)
 
             } else if (data.type == "BYE") {
                 var userName = data.userName;
@@ -112,7 +113,7 @@ class Chat {
         }
     }
 
-    addUsuario(userName, picture) {
+    addUsuario(userName) {
         var new_user = true;
         for (var i = 0; i < this.usuarios().length; i++) {
             if (this.usuarios()[i].nombre == userName) {
@@ -120,8 +121,23 @@ class Chat {
             }
         }
         if (new_user) {
-            this.usuarios.push(new Usuario(userName, picture));
+            this.usuarios.push(new Usuario(userName));
         }
+    }
+
+    addFoto(userName, picture) {
+
+        for (var i = 0; i < this.usuarios().length; i++) {
+            if (this.usuarios()[i].nombre == userName) {
+                var userUpdate = this.usuarios()[i];
+                console.log(userUpdate);
+                userUpdate.foto = picture;
+                console.log(userUpdate);
+                this.usuarios.replace(this.usuarios()[i], new Usuario(userUpdate.nombre, userUpdate.foto))
+
+            }
+        }
+
     }
 
     // seleccionarDestinatario = function(data) {
