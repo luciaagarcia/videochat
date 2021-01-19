@@ -1,23 +1,123 @@
-/* 
+    /* 
     Document   : override
     Created on : <date>
     Author     : <author>
     Description:
         This is where any of your application specific styles should be included
 */
-
-/* Hides the content area until we are ready to display after paddings have been adjusted. 
+    /* Hides the content area until we are ready to display after paddings have been adjusted. 
     oj-complete is a marker class that is applied by the appController 
     after adjusting the content area. */
-.oj-applayout-content:not(.oj-complete) {
-  visibility: hidden;
-}
-
-.sendOffScreen {
-  position: absolute;
-  left: -10000px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
+    
+    .oj-applayout-content:not(.oj-complete) {
+        visibility: hidden;
+    }
+    
+    .sendOffScreen {
+        position: absolute;
+        left: -10000px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+    }
+    
+    .oj-hybrid-applayout-page {
+        background: #272626;
+    }
+    
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: white;
+    }
+    
+    .titulovideochat {
+        font-weight: 900;
+        font-size: 5rem;
+    }
+    
+    body {
+        color: white;
+    }
+    
+    #main .oj-hybrid-padding {
+        text-align: center;
+        margin-top: 10%;
+    }
+    
+    .fotoperfil {
+        border-radius: 50px;
+    }
+    
+    .row {
+        display: flex;
+        padding-bottom: 1%;
+    }
+    
+    .column {
+        flex: 50%;
+    }
+    
+    #Usuario {
+        text-align: center;
+        padding-top: 1%;
+    }
+    
+    .nombreUsuario {
+        padding-left: 15px;
+        color: #46b6ca;
+        size: 22px;
+    }
+    
+    .botonLlamar {
+        position: absolute;
+        margin-left: 75px;
+        color: #fff !important;
+        text-transform: uppercase;
+        text-decoration: none;
+        background: #60a3bc;
+        padding: 7px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 50px;
+        display: inline-block;
+        border: none;
+        transition: all 0.4s ease 0s;
+    }
+    
+    .botonLlamar:hover {
+        text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);
+        background: #457688;
+        -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+        -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+        transition: all 0.4s ease 0s;
+    }
+    
+    .banner {
+        background: #2e2c2c;
+    }
+    
+    button {
+        background: #60a3bc;
+        border-radius: 5px;
+    }
+    
+    .oj-hybrid-applayout-header-title {
+        font-weight: 3rem;
+        font-size: 3rem;
+        color: #457688;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .oj-hybrid-applayout-header {
+        background-color: #3f3f3f;
+    }
+    
+    .oj-navigationlist-element {
+        color: #60a3bc;
+    }

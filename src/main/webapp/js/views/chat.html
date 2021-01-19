@@ -35,12 +35,18 @@
                     <div class="oj-sm-6">
                         <h4>Usuarios</h4>
                         <!-- ko foreach : usuarios -->
-                        <div>
+                        <div class="row">
                             <!-- ko if : foto -->
-                            <img data-bind="attr : { src : foto }" width="45" height="45">
+                            <img class="fotoperfil row" data-bind="attr : { src : foto }" width="45" height="45">
                             <!-- /ko -->
-                            <a data-bind="html : nombre, click : function() { $parent.setDestinatario($data);}"></a>
-                            <button data-bind="click : function() { $parents[$parents.length-1].enviarOferta($data); }">Enviar oferta</button>
+                            <div id="Usuario">
+                                <div class="row">
+                                    <a class="nombreUsuario column" data-bind="html : nombre, click : function() { $parent.setDestinatario($data);}"></a>
+                                    <button class="botonLlamar button3 column" data-bind="click : function() { $parents[$parents.length-1].enviarOferta($data); }">Llamar</button>
+
+                                </div>
+                            </div>
+                            <hr style="border:2px; color:aqua">
                         </div>
                         <!-- /ko -->
                     </div>
