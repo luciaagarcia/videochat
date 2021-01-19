@@ -47,31 +47,31 @@ public class TestRegistro {
 	int numeroDeUsuarios = 100;
 
 	ArrayList<WebDriver> drivers = new ArrayList<>();
-	
+
 	@Autowired
 	UserRepository usersRepo;
-	
+
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "/Users/macariopolousaola/chromedriver");
-		System.setProperty("webdriver.gecko.driver", "/Users/macariopolousaola/geckodriver");
-				
-		//cargarCaras();
+		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+
+		cargarCaras();
 	}
 
 	private void cargarCaras() throws Exception {
 		String outputFolder = System.getProperty("java.io.tmpdir");
 		if (!outputFolder.endsWith("/"))
-			outputFolder+="/";
-		
+			outputFolder += "/";
+
 		CloseableHttpClient client = HttpClients.createDefault();
-		for (int i=1; i<=this.numeroDeUsuarios; i++) {
+		for (int i = 1; i <= this.numeroDeUsuarios; i++) {
 			System.out.println("Bajando foto " + i + "/" + numeroDeUsuarios);
 			HttpGet get = new HttpGet("https://thispersondoesnotexist.com/image");
 			CloseableHttpResponse response = client.execute(get);
 			HttpEntity entity = response.getEntity();
 			byte[] image = EntityUtils.toByteArray(entity);
-			try(FileOutputStream fos = new  FileOutputStream(outputFolder + "cara" + i + ".jpeg")) {
+			try (FileOutputStream fos = new FileOutputStream(outputFolder + "cara" + i + ".jpeg")) {
 				fos.write(image);
 			}
 		}
@@ -80,15 +80,15 @@ public class TestRegistro {
 
 	@After
 	public void tearDown() {
-		for (int i=0; i<drivers.size(); i++)
+		for (int i = 0; i < drivers.size(); i++)
 			drivers.get(i).close();
 	}
 
-	//@Test
-	//@Order(1)
+	@Test
+	@Order(1)
 	public void registrar() {
 		chrome = new ChromeDriver();
-		
+
 		chrome.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		chrome.get("https://localhost:7500/");
 		chrome.manage().window().setSize(new Dimension(1161, 977));
@@ -100,76 +100,80 @@ public class TestRegistro {
 		} catch (NoSuchElementException e) {
 			System.out.println(e);
 		}
-		
+
 		String inputFolder = System.getProperty("java.io.tmpdir");
 		if (!inputFolder.endsWith("/"))
-			inputFolder+="/";
+			inputFolder += "/";
 
 		String picturePath;
 		String script = "window.scrollTo(0,1000)";
 		JavascriptExecutor je = (JavascriptExecutor) chrome;
-		
-		for (int i=1; i<=numeroDeUsuarios; i++) {
+
+		for (int i = 1; i <= numeroDeUsuarios; i++) {
 			chrome.findElement(By.linkText("Crear cuenta")).click();
-			
-			
-			WebElement cajaNombre = chrome.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[1]"));
-			WebElement cajaEmail = chrome.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[2]"));
-			WebElement cajaPwd1 = chrome.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[3]"));
-			WebElement cajaPwd2 = chrome.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[4]"));
-			RemoteWebElement inputFile = (RemoteWebElement) chrome.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[5]"));
-			
+
+			WebElement cajaNombre = chrome
+					.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[1]"));
+			WebElement cajaEmail = chrome
+					.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[2]"));
+			WebElement cajaPwd1 = chrome
+					.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[3]"));
+			WebElement cajaPwd2 = chrome
+					.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[4]"));
+			RemoteWebElement inputFile = (RemoteWebElement) chrome
+					.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/input[5]"));
+
 			cajaNombre.sendKeys("a" + i);
 			cajaEmail.sendKeys("a" + i + "@gmail.com");
 			cajaPwd1.sendKeys("pepe");
 			cajaPwd2.sendKeys("pepe");
-			
+
 			LocalFileDetector detector = new LocalFileDetector();
 			picturePath = inputFolder + "cara" + i + ".jpeg";
 			File file = detector.getLocalFile(picturePath);
 			inputFile.setFileDetector(detector);
 			inputFile.sendKeys(file.getAbsolutePath());
-					
+
 			je.executeScript(script);
-			
+
 			WebElement botonCrearCuenta = chrome.findElement(By.id("btnCrearCuenta"));
 			botonCrearCuenta.click();
-			
+
 			new WebDriverWait(chrome, 60).ignoring(NoAlertPresentException.class)
-	        	.until(ExpectedConditions.alertIsPresent());
-			
+					.until(ExpectedConditions.alertIsPresent());
+
 			assertThat(chrome.switchTo().alert().getText(), is("Registrado correctamente"));
 			chrome.switchTo().alert().accept();
-		}		
-		
+		}
+
 		chrome.quit();
 	}
-	
-	@Test
-	@Order(2)
+
+	// @Test
+	// @Order(2)
 	public void login() {
 		int usuarios = 2;
 		SecureRandom dado = new SecureRandom();
 		ArrayList<String> nombres = new ArrayList<>();
-		
-		for (int i=0; i<usuarios; i++) {
+
+		for (int i = 0; i < usuarios; i++) {
 			int n = 1 + dado.nextInt(99);
 			String nombre = "a" + n;
 			if (nombres.contains(nombre))
-				i=i-1;
+				i = i - 1;
 			else
 				nombres.add(nombre);
 		}
 		int filas = (int) Math.sqrt(usuarios);
 		int columnas = filas;
-		
-		int ancho=1920/columnas, alto=1200/filas;
-		int posX = 0, posY=0;
-		
-		for (int i=0; i<usuarios; i++) {
+
+		int ancho = 1920 / columnas, alto = 1200 / filas;
+		int posX = 0, posY = 0;
+
+		for (int i = 0; i < usuarios; i++) {
 			ChromeOptions options = new ChromeOptions();
 			options.addArguments("--use-fake-ui-for-media-stream", "--disable-user-media-security");
-			
+
 			ChromeDriver driver = new ChromeDriver(options);
 			driver.manage().window().setSize(new Dimension(ancho, alto));
 			driver.manage().window().setPosition(new Point(posX, posY));
@@ -181,10 +185,13 @@ public class TestRegistro {
 			} catch (NoSuchElementException e) {
 				System.out.println(e);
 			}
-			WebElement cajaNombre = driver.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/div[1]/div[1]/input"));
-			WebElement cajaPwd = driver.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/div[1]/div[2]/input"));
-			WebElement btnEntrar = driver.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/div[1]/div[3]/button"));
-			
+			WebElement cajaNombre = driver.findElement(
+					By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/div[1]/div[1]/input"));
+			WebElement cajaPwd = driver.findElement(
+					By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/div[1]/div[2]/input"));
+			WebElement btnEntrar = driver.findElement(
+					By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div/div[1]/div[3]/button"));
+
 			cajaNombre.clear();
 			cajaPwd.clear();
 			cajaNombre.sendKeys(nombres.get(i));
@@ -192,26 +199,19 @@ public class TestRegistro {
 			btnEntrar.click();
 			drivers.add(driver);
 			posX = posX + ancho;
-			if ((i+1)%columnas==0) {
+			if ((i + 1) % columnas == 0) {
 				posX = 0;
 				posY = posY + alto + 1;
 			}
 		}
-		
+
 		WebDriver driverLlamador = drivers.get(0);
-		
-		// Vídeo local
-		WebElement btn = driverLlamador.findElement(By.xpath("/html/body/div/oj-module/div[1]/div[2]/div/div/div[2]/button[1]"));
-		btn.click();
-		
-		// Crear conexión
-		btn = driverLlamador.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div[2]/button[2]"));
-		btn.click();
-		
+
 		// Enviar oferta
-		btn = driverLlamador.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div[3]/div[1]/div[1]/button"));
+		WebElement btn = driverLlamador.findElement(
+				By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div[2]/div[1]/div/button"));
 		btn.click();
-		
+
 		int llamado = dado.nextInt(usuarios);
 		String nombreLlamado = nombres.get(llamado);
 		boolean clickHecho = false;
@@ -221,15 +221,15 @@ public class TestRegistro {
 				WebElement link = driverLlamador.findElement(By.partialLinkText(nombreLlamado));
 				link.click();
 				clickHecho = true;
-			}  catch (Exception e) {
-				scroll+=30;
+			} catch (Exception e) {
+				scroll += 30;
 				String script = "window.scrollTo(0," + scroll + ")";
 				((JavascriptExecutor) driverLlamador).executeScript(script);
 			}
-		} while (!clickHecho);		
-		
+		} while (!clickHecho);
+
 		WebDriver driverLlamado = null;
-		for (int i=0; i<usuarios; i++) {
+		for (int i = 0; i < usuarios; i++) {
 			if (nombres.get(i).equals(nombreLlamado)) {
 				driverLlamado = drivers.get(i);
 				break;
