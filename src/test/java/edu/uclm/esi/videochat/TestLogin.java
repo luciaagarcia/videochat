@@ -68,7 +68,7 @@ public class TestLogin {
             outputFolder += "/";
 
         CloseableHttpClient client = HttpClients.createDefault();
-        for (int i = 1; i <= this.numeroDeUsuarios; i++) {
+        for (int i = 0; i < this.numeroDeUsuarios; i++) {
             System.out.println("Bajando foto " + i + "/" + numeroDeUsuarios);
             HttpGet get = new HttpGet("https://thispersondoesnotexist.com/image");
             CloseableHttpResponse response = client.execute(get);
@@ -79,6 +79,13 @@ public class TestLogin {
             }
         }
         client.close();
+    }
+
+    public void eliminarUsuarioRegistrados() {
+        for (int i = 0; i < nombres.length; i++) {
+            usersRepo.deleteUser(nombres[i]);
+        }
+
     }
 
     // @After
@@ -97,6 +104,8 @@ public class TestLogin {
         chrome.manage().window().setSize(new Dimension(1161, 977));
         chrome.manage().window().setPosition(new Point(0, 0));
 
+        eliminarUsuarioRegistrados();
+
         try {
             chrome.findElement(By.id("details-button")).click();
             chrome.findElement(By.id("proceed-link")).click();
@@ -112,7 +121,7 @@ public class TestLogin {
         String script = "window.scrollTo(0,1000)";
         JavascriptExecutor je = (JavascriptExecutor) chrome;
 
-        for (int i = 1; i <= nombres.length; i++) {
+        for (int i = 0; i < nombres.length; i++) {
             chrome.findElement(By.linkText("Crear cuenta")).click();
 
             WebElement cajaNombre = chrome
