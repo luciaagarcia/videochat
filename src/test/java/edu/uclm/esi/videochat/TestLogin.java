@@ -213,7 +213,7 @@ public class TestLogin {
 
         }
         WebElement llamarAna = driver[0].findElement(
-                By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div[2]/div[1]/div[2]/button"));
+                By.xpath("/html/body/div/oj-module/div[1]/div[2]/div/div/div[2]/div[1]/div/div[2]/div/div/button"));
 
         llamarAna.click();
         timeout(3000);
@@ -227,7 +227,7 @@ public class TestLogin {
         alert.accept();
         // Ana llama a lucas
         WebElement llamarLucas = driver[1].findElement(
-                By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div[2]/div[1]/div[3]/button"));
+                By.xpath("/html/body/div/oj-module/div[1]/div[2]/div/div/div[2]/div[1]/div/div[3]/div/div/button"));
         llamarLucas.click();
         // Lucas acepta
         alert = driver[2].switchTo().alert();

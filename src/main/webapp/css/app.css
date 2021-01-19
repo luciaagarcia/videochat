@@ -121,3 +121,20 @@
     .oj-navigationlist-element {
         color: #60a3bc;
     }
+    
+    .scroll {
+        overflow-y: scroll;
+    }
+    
+    .scrikk::-webkit-scrollbar {
+        width: 8px;
+        /* Tamaño del scroll en vertical */
+        height: 8px;
+        /* Tamaño del scroll en horizontal */
+        display: none;
+        /* Ocultar scroll */
+    }
+    
+    .chat {
+        background-color: #3f3f3f;
+    }

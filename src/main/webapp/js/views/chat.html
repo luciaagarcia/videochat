@@ -15,7 +15,7 @@
                 <div class="oj-sm-12">
                     <div class="oj-sm-4">
                         <!-- ko if : picture -->
-                        <img data-bind="attr : { src : picture }" width="50" height="50">
+                        <img class="fotoperfil" data-bind="attr : { src : picture }" width="50" height="50">
                         <!-- /ko -->
                     </div>
                     <div class="oj-sm-4">
@@ -34,35 +34,35 @@
                 <div class="oj-sm-12 oj-flex">
                     <div class="oj-sm-6">
                         <h4>Usuarios</h4>
-                        <!-- ko foreach : usuarios -->
-                        <div class="row">
-                            <!-- ko if : foto -->
-                            <img class="fotoperfil row" data-bind="attr : { src : foto }" width="45" height="45">
-                            <!-- /ko -->
-                            <div id="Usuario">
-                                <div class="row">
-                                    <a class="nombreUsuario column" data-bind="html : nombre, click : function() { $parent.setDestinatario($data);}"></a>
-                                    <button class="botonLlamar button3 column" data-bind="click : function() { $parents[$parents.length-1].enviarOferta($data); }">Llamar</button>
+                        <div class="scroll" style="height: 200px;">
+                            <!-- ko foreach : usuarios -->
+                            <div class="row">
+                                <!-- ko if : foto -->
+                                <img class="fotoperfil row" data-bind="attr : { src : foto }" width="45" height="45">
+                                <!-- /ko -->
+                                <div id="Usuario">
+                                    <div class="row">
+                                        <a class="nombreUsuario column" data-bind="html : nombre, click : function() { $parent.setDestinatario($data);}"></a>
+                                        <button class="botonLlamar button3 column" data-bind="click : function() { $parents[$parents.length-1].enviarOferta($data); }">Llamar</button>
 
+                                    </div>
                                 </div>
+                                <hr style="border:2px; color:aqua">
                             </div>
-                            <hr style="border:2px; color:aqua">
+
+                            <!-- /ko -->
                         </div>
-                        <!-- /ko -->
                     </div>
 
-                    <div class="oj-sm-6">
-                        <h4>Mensajes a todos</h4>
-                        <!-- ko foreach : mensajesRecibidos -->
-                        <div>
-                            <strong data-bind="html : hora"></strong> &nbsp;
-                            <span data-bind="html : texto"></span>
+                    <div class="oj-sm-4">
+                        <h4>Mensajes de conexión</h4>
+                        <div class="scroll" style="height: 200px;">
+                            <!-- ko with : $parents[$parents.length-1].videoChat -->
+                            <!-- ko foreach : mensajes -->
+                            <div data-bind="html : texto, style : { color :  color }"></div>
+                            <!-- /ko -->
+                            <!-- /ko -->
                         </div>
-                        <!-- /ko -->
-
-                        <input type="text" size="50" data-bind="value : mensajeQueVoyAEnviar">
-                        <button data-bind="click : enviarATodos">Enviar mensaje a todos</button>
-                        <br>
                     </div>
                 </div>
 
@@ -74,25 +74,18 @@
                             <!-- ko with : nombreInterlocutor -->
                             Chat con <span data-bind="html : $data"></span>
                             <!-- /ko -->
+                            <div class="scroll chat" style="height: 200px; width: 75%;">
+                                <!-- ko foreach : mensajes -->
+                                <div>
+                                    <span data-bind="html : $data.hora"></span>:
+                                    <span data-bind="html : $data.texto"></span>
+                                </div>
+                                <!-- /ko -->
+                            </div>
                             <input type="text" data-bind="value : textoAEnviar" placeholder="Texto de tu mensaje">
                             <button data-bind="click : enviar">Enviar</button>
                             <button data-bind="click : obtenerMensajes">Recuperar Mensajes</button>
-
-                            <!-- ko foreach : mensajes -->
-                            <div>
-                                <span data-bind="html : $data.hora"></span>:
-                                <span data-bind="html : $data.texto"></span>
-                            </div>
-                            <!-- /ko -->
                         </div>
-                        <!-- /ko -->
-                    </div>
-                    <div class="oj-sm-4">
-                        <h4>Mensajes de conexión</h4>
-                        <!-- ko with : $parents[$parents.length-1].videoChat -->
-                        <!-- ko foreach : mensajes -->
-                        <div data-bind="html : texto, style : { color :  color }"></div>
-                        <!-- /ko -->
                         <!-- /ko -->
                     </div>
                     <div class="oj-sm-4">
@@ -100,6 +93,22 @@
                         <video id="widgetVideoLocal" playsinline autoplay controls mute width="200" height="200"></video>
                         <video id="widgetVideoRemoto" playsinline autoplay controls width="200" height="200"></video>
                     </div>
+                    <div class="oj-sm-4">
+                        <h4>Mensajes a todos</h4>
+                        <div class="scroll chat" style="height: 200px;">
+                            <!-- ko foreach : mensajesRecibidos -->
+
+                            <strong data-bind="html : hora"></strong> &nbsp;
+                            <span data-bind="html : texto"></span>
+                            <br>
+                            <!-- /ko -->
+                        </div>
+                        <input type="text" size="50" data-bind="value : mensajeQueVoyAEnviar">
+                        <button data-bind="click : enviarATodos">Enviar mensaje a todos</button>
+                        <br>
+                    </div>
+
+
                 </div>
                 <!-- /ko -->
             </div>
