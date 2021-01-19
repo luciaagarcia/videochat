@@ -16,4 +16,8 @@ public interface UserRepository extends CrudRepository <User, String> {
 
 	public User findByNameAndPwd(String name, String pwd);
 	public Optional<User> findByName(String name);
+
+	@Query(value = "SELECT * FROM user where name=:name", nativeQuery = true)
+	public User getImage(@Param("name") String name);
 }
+

@@ -123,6 +123,11 @@ public class UsersController {
 	public List<User> getUsuariosConectados() {
 		return Manager.get().getUsuariosConectados();
 	}
+	
+	@GetMapping(value = "/getImagenesConectados/{userName}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public User getImagenesConectados(HttpServletRequest request, HttpServletResponse response, @PathVariable String userName) throws Exception {
+		return userRepo.getImage(userName);
+	}
 
 	@PostMapping(value = "/obtenerMensajes")
 	public ArrayList<Message> obtenerMensajes(HttpServletRequest request, @RequestBody Map<String, Object> user) throws Exception {
