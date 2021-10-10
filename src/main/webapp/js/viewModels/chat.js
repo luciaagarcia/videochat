@@ -38,9 +38,13 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
                     contentType: 'application/json',
                     success: function(response) {
                         for (var i = 0; i < response.length; i++) {
+                            var user = {
+                                userName: response[i].name,
+                                picture: ko.observable(null)
+                            };
                             var userName = response[i].name;
                             self.chat().addUsuario(userName);
-                            self.getImagenesConectados(userName);
+                            self.getImagen(user);
                         }
 
                     },
@@ -53,15 +57,15 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 
             }
 
-            self.getImagenesConectados = function(userName) {
+            self.getImagen = function(user) {
 
                 var data = {
-                    url: "users/getImagenesConectados/" + userName,
+                    url: "users/getImagenesConectados/" + user.userName,
                     type: "get",
                     contentType: 'application/json',
                     success: function(response) {
                         var picture = response.picture;
-                        self.chat().addFoto(userName, picture);
+                        user.picture(picture);
                     },
                     error: function(response) {
                         self.error(response.responseJSON.error);
